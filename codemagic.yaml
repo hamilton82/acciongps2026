@@ -46,9 +46,6 @@ workflows:
     max_build_duration: 60
     environment:
       flutter: stable
-      groups:
-        - app_store_connect
-        - ios_signing
     scripts:
       - mkdir -p output
       - *install_dependencies
