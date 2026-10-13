@@ -19,6 +19,8 @@ definitions:
     - &build_ios
       name: Build iOS IPA
       script: |
+        dart pub global activate flutterfire_cli
+        export PATH="$PATH:$HOME/.pub-cache/bin"
         flutter build ipa --release --no-codesign
 
   artifacts:
