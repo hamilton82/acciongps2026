@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "350823932058",
+    "project_id": "acciongps",
+    "storage_bucket": "acciongps.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:350823932058:android:e4125872544ac26a5dff23",
+        "android_client_info": {
+          "package_name": "org.acciongps.manager"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBbFUaw8BJh1WRl501uR7Sr65CYBe4XJC8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
