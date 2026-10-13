@@ -69,8 +69,6 @@ workflows:
     scripts:
       - mkdir -p output
       - *install_dependencies
-      - |
-        flutter build ipa --release \
-          --export-options-plist=$PWD/ios/ExportOptions.plist
+      - *build_ios
     artifacts:
       - build/ios/ipa/*.ipa
