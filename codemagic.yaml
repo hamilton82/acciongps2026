@@ -60,7 +60,6 @@ workflows:
     environment:
       flutter: stable
       groups:
-        - app_store_connect
         - ios_signing
     scripts:
       - mkdir -p output
