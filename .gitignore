@@ -63,3 +63,4 @@ assets/upload-keystore.jks
 
 # Rebrand
 rebrand_config.json
+*.app.zip
