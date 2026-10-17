@@ -1,7 +1,7 @@
 name: traccar_manager
 description: "AccionGPS Manager"
 publish_to: 'none'
-version: 2026.9.20+101
+version: 2026.9.20+102
 
 environment:
   sdk: ^3.7.2
