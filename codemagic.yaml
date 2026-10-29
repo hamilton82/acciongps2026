@@ -33,6 +33,19 @@ definitions:
       script: |
         set -e
         flutter config --no-enable-swift-package-manager
+        printf 'http1.1\nretry 5\nconnect-timeout 30\n' >> "$HOME/.curlrc"
+        cd ios
+        attempt=1
+        until pod install; do
+          if [ "$attempt" -ge 3 ]; then
+            echo "FATAL: pod install failed after 3 attempts."
+            exit 1
+          fi
+          echo "pod install failed (attempt $attempt), retrying in 15s..."
+          attempt=$((attempt + 1))
+          sleep 15
+        done
+        cd ..
         flutter build ios --config-only
         if grep -q "XCLocalSwiftPackageReference" ios/Runner.xcodeproj/project.pbxproj; then
           echo "FATAL: Swift Package Manager reference still present in the Xcode project."
