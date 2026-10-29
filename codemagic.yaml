@@ -24,6 +24,27 @@ definitions:
       name: Build iOS IPA (signed)
       script: flutter build ipa --release
 
+    # Apple rejected build 101 (Guideline 2.1) because a DEBUG build was uploaded:
+    # a debug Flutter app ships kernel_blob.bin (JIT) and cannot start on a real
+    # device, so it shows a Flutter error on launch. This guard fails the build
+    # if that ever happens again.
+    - &verify_release_ipa
+      name: Verify IPA is a RELEASE (AOT) build
+      script: |
+        set -e
+        IPA=$(ls build/ios/ipa/*.ipa | head -n 1)
+        echo "Verifying: $IPA"
+        unzip -l "$IPA" | grep -E "App.framework|kernel_blob" || true
+        if unzip -l "$IPA" | grep -q "kernel_blob.bin"; then
+          echo "FATAL: kernel_blob.bin found. This is a DEBUG build and Apple will reject it."
+          exit 1
+        fi
+        if unzip -p "$IPA" "Payload/Runner.app/Info.plist" | grep -q "_dartVmService"; then
+          echo "FATAL: debug-only NSBonjourServices/_dartVmService key found. This is a DEBUG build."
+          exit 1
+        fi
+        echo "OK: release (AOT) build confirmed."
+
 workflows:
   android-release:
     name: Android Release (APK + AAB)
@@ -50,6 +71,7 @@ workflows:
       - mkdir -p output
       - *install_dependencies
       - *build_ios_nosign
+      - *verify_release_ipa
     artifacts:
       - build/ios/ipa/*.ipa
 
@@ -65,6 +87,7 @@ workflows:
       - mkdir -p output
       - *install_dependencies
       - *build_ios_sign
+      - *verify_release_ipa
     artifacts:
       - build/ios/ipa/*.ipa
 
