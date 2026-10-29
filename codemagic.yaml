@@ -24,6 +24,10 @@ definitions:
     # Flutter SwiftPM package graph on CI ("count of array (N) differs from count
     # of index set (N-1)"). The project still supports CocoaPods, so disable the
     # Swift Package Manager integration and build every plugin through pods.
+    - &disable_spm
+      name: Turn off Flutter Swift Package Manager integration
+      script: flutter config --no-enable-swift-package-manager
+
     - &disable_spm_use_cocoapods
       name: Use CocoaPods instead of Swift Package Manager
       script: |
@@ -135,6 +139,7 @@ workflows:
       flutter: stable
     scripts:
       - *install_dependencies
+      - *disable_spm
       - |
         flutter build ios --simulator --debug
     artifacts:
