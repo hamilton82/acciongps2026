@@ -20,6 +20,22 @@ definitions:
       name: Build iOS (no codesign)
       script: flutter build ipa --release --no-codesign
 
+    # Xcode (IDESPMWorkspaceDelegate) intermittently crashes while resolving the
+    # Flutter SwiftPM package graph on CI ("count of array (N) differs from count
+    # of index set (N-1)"). The project still supports CocoaPods, so disable the
+    # Swift Package Manager integration and build every plugin through pods.
+    - &disable_spm_use_cocoapods
+      name: Use CocoaPods instead of Swift Package Manager
+      script: |
+        set -e
+        flutter config --no-enable-swift-package-manager
+        flutter build ios --config-only
+        if grep -q "XCLocalSwiftPackageReference" ios/Runner.xcodeproj/project.pbxproj; then
+          echo "FATAL: Swift Package Manager reference still present in the Xcode project."
+          exit 1
+        fi
+        echo "OK: Swift Package Manager integration removed, CocoaPods in use."
+
     # Apple rejected build 101 (Guideline 2.1) because a DEBUG build was uploaded:
     # a debug Flutter app ships kernel_blob.bin (JIT) and cannot start on a real
     # device, so it shows a Flutter error on launch. This guard fails the build
@@ -66,6 +82,7 @@ workflows:
     scripts:
       - mkdir -p output
       - *install_dependencies
+      - *disable_spm_use_cocoapods
       - *build_ios_nosign
       - *verify_release_ipa
     artifacts:
@@ -84,6 +101,7 @@ workflows:
     scripts:
       - mkdir -p output
       - *install_dependencies
+      - *disable_spm_use_cocoapods
       - name: Set up keychain for code signing
         script: keychain initialize
       - name: Fetch signing files from App Store Connect
