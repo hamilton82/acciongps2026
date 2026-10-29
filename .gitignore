@@ -64,3 +64,20 @@ assets/upload-keystore.jks
 # Rebrand
 rebrand_config.json
 *.app.zip
+
+# Signing secrets / provisioning - NEVER commit
+*.p12
+*.p8
+*.pfx
+*.cer
+*.der
+*.mobileprovision
+*.ipa
+*.keystore
+/acciongps_manager.zip
+ios_cert.p12
+assets/ios_cert.p12
+assets/p8.p8
+assets/upload-keystore-std.p12
+assets/cert test.cer
+
