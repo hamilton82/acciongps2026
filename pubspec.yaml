@@ -1,7 +1,7 @@
 name: traccar_manager
 description: "AccionGPS Manager"
 publish_to: 'none'
-version: 2026.9.20+102
+version: 2026.9.20+103
 
 environment:
   sdk: ^3.7.2
@@ -14,7 +14,6 @@ dependencies:
   firebase_messaging: ^16.5.0
   flutter:
     sdk: flutter
-  flutter_inappwebview: ^6.2.0-beta.3
   flutter_secure_storage: ^11.0.0
   http: ^1.6.0
   local_auth: ^3.0.2
