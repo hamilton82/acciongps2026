@@ -20,10 +20,6 @@ definitions:
       name: Build iOS (no codesign)
       script: flutter build ipa --release --no-codesign
 
-    - &build_ios_sign
-      name: Build iOS IPA (signed)
-      script: flutter build ipa --release
-
     # Apple rejected build 101 (Guideline 2.1) because a DEBUG build was uploaded:
     # a debug Flutter app ships kernel_blob.bin (JIT) and cannot start on a real
     # device, so it shows a Flutter error on launch. This guard fails the build
@@ -83,13 +79,35 @@ workflows:
       flutter: stable
       groups:
         - ios_signing
+      vars:
+        BUNDLE_ID: org.acciongps.manager
     scripts:
       - mkdir -p output
       - *install_dependencies
-      - *build_ios_sign
+      - name: Set up keychain for code signing
+        script: keychain initialize
+      - name: Fetch signing files from App Store Connect
+        script: |
+          app-store-connect fetch-signing-files "$BUNDLE_ID" \
+            --type IOS_APP_STORE \
+            --create
+      - name: Add certificates to keychain
+        script: keychain add-certificates
+      - name: Set up code signing settings on Xcode project
+        script: xcode-project use-profiles
+      - name: Build iOS IPA (signed release)
+        script: flutter build ipa --release --export-options-plist=/Users/builder/export_options.plist
       - *verify_release_ipa
     artifacts:
       - build/ios/ipa/*.ipa
+    publishing:
+      app_store_connect:
+        api_key: $APP_STORE_CONNECT_PRIVATE_KEY
+        key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
+        issuer_id: $APP_STORE_CONNECT_ISSUER_ID
+        submit_to_testflight: true
+        submit_to_app_store: true
+        cancel_previous_submissions: true
 
   ios-simulator:
     name: iOS Simulator Preview
