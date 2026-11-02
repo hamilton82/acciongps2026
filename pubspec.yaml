@@ -19,7 +19,7 @@ dependencies:
   local_auth: ^3.0.2
   path_provider: ^2.1.6
   permission_handler: ^13.0.0
-  rate_my_app: 2.1.0
+  rate_my_app: 2.4.2
   share_plus: ^13.3.0
   shared_preferences: ^2.5.5
   shared_preferences_android: ^2.4.27
