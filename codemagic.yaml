@@ -125,7 +125,7 @@ workflows:
       - name: Set up code signing settings on Xcode project
         script: xcode-project use-profiles
       - name: Build iOS IPA (signed release)
-        script: flutter build ipa --release --export-options-plist=/Users/builder/export_options.plist
+        script: flutter build ipa --release --build-number="$(date +%Y%m%d%H%M%S)" --export-options-plist=/Users/builder/export_options.plist
       - *verify_release_ipa
     artifacts:
       - build/ios/ipa/*.ipa
